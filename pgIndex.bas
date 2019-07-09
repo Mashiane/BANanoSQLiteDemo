@@ -5,9 +5,10 @@ Type=StaticCode
 Version=7.51
 @EndOfDesignText@
 'Static code module
+#IgnoreWarnings:12
 Sub Process_Globals
 	Private body As BANanoElement
-	Private BANano As BANano
+	Private BANano As BANano  'ignore
 	Private dummy As UOENowData
 	Private elNotif As BANanoElement
 	Private elCommand As BANanoElement
@@ -58,6 +59,20 @@ Sub Init
 	Dim btnUpdates As UOENowHTML
 	btnUpdates.Initialize("btnupdate","button").SetText("Update All")
 	body.Append(btnUpdates.HTML)
+	'
+	body.Append("<br><br>")
+	Dim btn1 As UOENowHTML
+	btn1.Initialize("btninsert1","button").SetText("Insert Specific")
+	body.Append(btn1.HTML)
+	Dim btnSelect1 As UOENowHTML
+	btnSelect1.Initialize("btnselect1","button").SetText("Select Specific")
+	body.Append(btnSelect1.HTML)
+	Dim btnDelete1 As UOENowHTML
+	btnDelete1.Initialize("btndelete1","button").SetText("Delete Specific")
+	body.Append(btnDelete1.HTML)
+	Dim btnUpdate1 As UOENowHTML
+	btnUpdate1.Initialize("btnupdate1","button").SetText("Update Specific")
+	body.Append(btnUpdate1.HTML)
 	
 	'add events to the buttons
 	BANano.GetElement("#btninserts").HandleEvents("click", Me, "inserts")
@@ -65,56 +80,140 @@ Sub Init
 	BANano.GetElement("#btnupdate").HandleEvents("click", Me, "updates")
 	BANano.GetElement("#btndelete").HandleEvents("click", Me, "deletes")
 	'
+	BANano.GetElement("#btninsert1").HandleEvents("click", Me, "insert1")
+	BANano.GetElement("#btnselect1").HandleEvents("click", Me, "select1")
+	BANano.GetElement("#btndelete1").HandleEvents("click", Me, "delete1")
+	BANano.GetElement("#btnupdate1").HandleEvents("click", Me, "update1")
+		
+	'
 	elNotif = BANano.GetElement("#notify")
 	elCommand = BANano.GetElement("#command")
 	elArgs = BANano.GetElement("#args")
 End Sub
 
+Sub update1
+	ClearFirst
+	'initialize bananosqlite
+	sqlite.Initialize()
+	'define field types
+	sqlite.AddStrings(Array("id","parentid"))
+	'generate random data
+	dummy.Initialize
+	Dim parentid As String = dummy.Rand_Company_Name
+	'define query data & execute
+	Dim sql As String = sqlite.UpdateWhere("items", CreateMap("parentid":parentid), CreateMap("id":"A"))
+	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
+	'get the result
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
+	'
+	elCommand.SetText("Command: " & rs.query)
+	elArgs.SetText("Arguements: " & BANano.ToJson(rs.args))
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result))
+	
+End Sub
+
+
+Sub insert1
+	ClearFirst
+	'initialize bananosqlite
+	sqlite.Initialize()
+	'create a record
+	Dim rec As Map = CreateMap()
+	rec.Put("id", "A")
+	rec.Put("jsoncontent", "B")
+	rec.Put("tabindex", 1)
+	rec.put("parentid", "form")
+	'indicate field data types
+	sqlite.AddStrings(Array("id"))
+	sqlite.AddIntegers(Array("tabindex"))
+	'execute the insert
+	Dim sql As String = sqlite.Insert("items", rec)
+	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
+	'return the resultset
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
+	'
+	elCommand.SetText("Command: " & rs.query)
+	elArgs.SetText("Arguements: " & BANano.ToJson(rs.args))
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result) & " rowid!")
+End Sub
+
+Sub Select1
+	ClearFirst
+	'initialize bananosqlite
+	sqlite.Initialize()
+	'indicate field data types
+	sqlite.AddStrings(Array("id"))
+	'execute select where
+	Dim sql As String = sqlite.SelectWhere("items", Array("*"), CreateMap("id":"A"), Array("id"))
+	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
+	'get the result
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
+	'
+	elCommand.SetText("Command: " & rs.query)
+	elArgs.SetText("Arguements: " & BANano.ToJson(rs.args))
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result))
+End Sub
+
+Sub Delete1
+	ClearFirst
+	'initialize bananosqlite
+	sqlite.Initialize()
+	'define field types
+	sqlite.AddStrings(Array("id"))
+	'define query data & execute
+	Dim sql As String = sqlite.DeleteWhere("items", CreateMap("id":"A"))
+	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
+	'get the result
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
+	
+	elCommand.SetText("Command: " & rs.query)
+	elArgs.SetText("Arguements: ")
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result))
+End Sub
+
+
 ''update all
 Sub updates
 	ClearFirst
-	sqlite.Initialize 
+	sqlite.Initialize() 
 	dummy.Initialize
 	Dim parentid As String = dummy.Rand_Company_Name
 	'
 	Dim sql As String = sqlite.UpdateAll("items", CreateMap("parentid":parentid))
-	Dim dc As DBCommand = sqlite.GetCommand(sql)
 	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
-	Dim dbres As DBResult = sqlite.GetResult(res)
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
 	'
-	elCommand.SetText("Command: " & dc.sql)
-	elArgs.SetText("Arguements: " & BANano.ToJson(dc.args))
-	elNotif.SetText("Result: " & BANano.ToJson(dbres.data))
+	elCommand.SetText("Command: " & rs.query)
+	elArgs.SetText("Arguements: " & BANano.ToJson(rs.args))
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result))
 	
 End Sub
 '
 ''delete all records
 Sub Deletes
 	ClearFirst
-	sqlite.Initialize 
+	sqlite.Initialize() 
 	Dim sql As String = sqlite.DeleteAll("items")
-	Dim dc As DBCommand = sqlite.GetCommand(sql)
 	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
-	Dim dbres As DBResult = sqlite.GetResult(res)
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
 	
-	elCommand.SetText("Command: " & dc.sql)
+	elCommand.SetText("Command: " & rs.query)
 	elArgs.SetText("Arguements: ")
-	elNotif.SetText("Result: " & BANano.ToJson(dbres.data))
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result))
 End Sub
 '
 'select all records
 Sub Selects
 	ClearFirst
 	'build the select statement
-	sqlite.Initialize 
+	sqlite.Initialize() 
 	Dim sql As String = sqlite.SelectAll("items", Array("*"), Array("id"))
-	Dim dc As DBCommand = sqlite.GetCommand(sql)
 	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
-	Dim dbres As DBResult = sqlite.GetResult(res)
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
 	'
-	elCommand.SetText("Command: " & dc.sql)
-	elArgs.SetText("Arguements: " & BANano.ToJson(dc.args))
-	elNotif.SetText("Result: " & BANano.ToJson(dbres.data))
+	elCommand.SetText("Command: " & rs.query)
+	elArgs.SetText("Arguements: " & BANano.ToJson(rs.args))
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result))
 End Sub
 '
 'insert dummy records to the db
@@ -134,19 +233,18 @@ Sub Inserts
 	Dim struct As Map = records.Get(0)
 	'
 	'initialize sqlite helper
-	sqlite.Initialize
+	sqlite.Initialize()
 	'ensure you specify the field types , rest are strings
 	sqlite.AddStrings(Array("id"))
 	sqlite.AddIntegers(Array("tabindex"))
 	'define the field types
 	Dim sql As String = sqlite.Insert("items", struct)
-	Dim dc As DBCommand = sqlite.GetCommand(sql)
 	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbname, "data": sql))
-	Dim dbres As DBResult = sqlite.GetResult(res)
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
 	'
-	elCommand.SetText("Command: " & dc.sql)
-	elArgs.SetText("Arguements: " & BANano.ToJson(dc.args))
-	elNotif.SetText("Result: " & BANano.ToJson(dbres.data) & " rowid!")
+	elCommand.SetText("Command: " & rs.query)
+	elArgs.SetText("Arguements: " & BANano.ToJson(rs.args))
+	elNotif.SetText("Result: " & BANano.ToJson(rs.result) & " rowid!")
 End Sub
 '
 '

@@ -4,10 +4,10 @@ Group=Default Group
 Library1=jcore
 Library2=jfx
 Library3=banano
-Module1=BANanoSQLite
-Module2=UOENowData
-Module3=UOENowHTML
-Module4=pgIndex
+Module1=pgIndex
+Module2=BANanoSQLite
+Module3=UOENowData
+Module4=UOENowHTML
 NumberOfFiles=0
 NumberOfLibraries=3
 NumberOfModules=4
@@ -50,10 +50,9 @@ End Sub
 
 ' HERE STARTS YOUR APP
 Sub BANano_Ready()
-	Dim sqlite As BANanoSQLite
-	sqlite.Initialize 
 	dbName = $"${AppName}.db"$
-	'
+	Dim sqlite As BANanoSQLite
+	sqlite.Initialize()
 	'create items table with the structure
 	Dim els As Map = CreateMap()
 	els.Put("id", sqlite.DB_STRING)
@@ -61,9 +60,8 @@ Sub BANano_Ready()
 	els.Put("tabindex", sqlite.DB_INT)
 	els.put("parentid", sqlite.DB_STRING)
 	Dim sql As String = sqlite.CreateTable("items", els, "id")
-	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbName, "data":sql))
-	Dim dbres As DBResult = sqlite.GetResult(res)
-	Log(dbres.response)
-	Log(dbres.data)
+	Dim res As String = BANano.CallInlinePHPWait("BANanoSQLite", CreateMap("dbname": dbName, "data": sql))
+	Dim rs As ResultSet = sqlite.GetResultSet(sql,res)
+	Log(rs)
 	pgIndex.Init 
 End Sub

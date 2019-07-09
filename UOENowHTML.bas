@@ -38,31 +38,31 @@ Sub SetSpan(sText As String) As UOENowHTML
 End Sub
 
 'set vertical
-Sub SetVertical(b As Boolean) As UOENowHTML
+Sub SetVertical(b As Boolean) As UOENowHTML  'ignore
 	AddClass("vertical")
 	Return Me
 End Sub
 
 'set dark
-Sub SetDark(b As Boolean) As UOENowHTML
+Sub SetDark(b As Boolean) As UOENowHTML  'ignore
 	AddClass("dark")
 	Return Me
 End Sub
 
 'set box colored
-Sub SetBoxColored(b As Boolean) As UOENowHTML
+Sub SetBoxColored(b As Boolean) As UOENowHTML  'ignore
 	AddClass("box-colored")
 	Return Me
 End Sub
 
 'set section
-Sub SetSection(b As Boolean) As UOENowHTML
+Sub SetSection(b As Boolean) As UOENowHTML   'ignore
 	AddClass("section")
 	Return Me
 End Sub
 
 'set double padded
-Sub SetDoublePadded(b As Boolean) As UOENowHTML
+Sub SetDoublePadded(b As Boolean) As UOENowHTML  'ignore
 	AddClass("double-padded")
 	Return Me
 End Sub
@@ -76,69 +76,69 @@ Sub Wrap(wid As String, wrapType As String) As UOENowHTML
 End Sub
 
 'set row
-Sub SetRow(b As Boolean) As UOENowHTML
+Sub SetRow(b As Boolean) As UOENowHTML   'ignore
 	AddClass("row")
 	Return Me
 End Sub
 
 'set responsive padding
-Sub SetResponsivePadding(b As Boolean) As UOENowHTML
+Sub SetResponsivePadding(b As Boolean) As UOENowHTML   'ignore
 	AddClass("responsive-padding")
 	Return Me
 End Sub
 
 
 'set responsive margin
-Sub SetResponsiveMargin(b As Boolean) As UOENowHTML
+Sub SetResponsiveMargin(b As Boolean) As UOENowHTML   'ignore
 	AddClass("responsive-margin")
 	Return Me
 End Sub
 
 'set inverse
-Sub SetInverse(b As Boolean) As UOENowHTML
+Sub SetInverse(b As Boolean) As UOENowHTML   'ignore
 	AddClass("inverse")
 	Return Me
 End Sub
 
 'set tertiary
-Sub SetTertiary(b As Boolean) As UOENowHTML
+Sub SetTertiary(b As Boolean) As UOENowHTML  'ignore
 	AddClass("tertiary")
 	Return Me
 End Sub
 
 'set secondary
-Sub SetSecondary(b As Boolean) As UOENowHTML
+Sub SetSecondary(b As Boolean) As UOENowHTML   'ignore
 	AddClass("secondary")
 	Return Me
 End Sub
 
 'set primary
-Sub SetPrimary(b As Boolean) As UOENowHTML
+Sub SetPrimary(b As Boolean) As UOENowHTML  'ignore
 	AddClass("primary")
 	Return Me
 End Sub
 
 
 'set circular
-Sub SetCircular(b As Boolean) As UOENowHTML
+Sub SetCircular(b As Boolean) As UOENowHTML  'ignore
 	AddClass("circular")
 	Return Me
 End Sub
 
 'set bordered
-Sub SetBordered(b As Boolean) As UOENowHTML
+Sub SetBordered(b As Boolean) As UOENowHTML  'ignore
 	AddClass("bordered")
 	Return Me
 End Sub
 
 'set shadowed
-Sub SetShadowed(b As Boolean) As UOENowHTML
+Sub SetShadowed(b As Boolean) As UOENowHTML  'ignore
 	AddClass("shadowed")
 	Return Me
 End Sub
 
 'set rounded
-Sub SetRounded(b As Boolean) As UOENowHTML
+Sub SetRounded(b As Boolean) As UOENowHTML  'ignore
 	AddClass("rounded")
 	Return Me
 End Sub
@@ -156,7 +156,7 @@ Sub SetAttr(attr As String, val As String) As UOENowHTML
 End Sub
 
 'set role button
-Sub SetRoleButton(b As Boolean) As UOENowHTML
+Sub SetRoleButton(b As Boolean) As UOENowHTML   'ignore
 	SetROLE("button")
 	Return Me
 End Sub
@@ -305,22 +305,22 @@ Sub SetTARGET(sValue As String) As UOENowHTML
 	Return Me
 End Sub
 
-Sub SetTargetBlank(b As Boolean) As UOENowHTML
+Sub SetTargetBlank(b As Boolean) As UOENowHTML  'ignore
 	SetTARGET("_blank")
 	Return Me
 End Sub
 
-Sub SetTargetSelf(b As Boolean) As UOENowHTML
+Sub SetTargetSelf(b As Boolean) As UOENowHTML  'ignore
 	SetTARGET("_self")
 	Return Me
 End Sub
 	
-Sub SetTargetParent(b As Boolean) As UOENowHTML
+Sub SetTargetParent(b As Boolean) As UOENowHTML  'ignore
 	SetTARGET("_parent")
 	Return Me
 End Sub
 	
-Sub SetTargetTop(b As Boolean) As UOENowHTML
+Sub SetTargetTop(b As Boolean) As UOENowHTML  'ignore
 	SetTARGET("_top")
 	Return Me
 End Sub
@@ -870,12 +870,12 @@ Public Sub Initialize(elID As String, eltag As String) As UOENowHTML
 	Return Me
 End Sub
 
-Sub SetSublink1(b As Boolean) As UOENowHTML
+Sub SetSublink1(b As Boolean) As UOENowHTML  'ignore
 	AddClass("sublink-1")
 	Return Me
 End Sub
 
-Sub SetSublink2(b As Boolean) As UOENowHTML
+Sub SetSublink2(b As Boolean) As UOENowHTML  'ignore
 	AddClass("sublink-2")
 	Return Me
 End Sub
@@ -1517,17 +1517,17 @@ Sub AddMailTo(emailaddress As String,subject As String,caption As String) As UOE
 	Return Me
 End Sub
 
-Sub SetWarning(b As Boolean) As UOENowHTML
+Sub SetWarning(b As Boolean) As UOENowHTML  'ignore
 	AddClass("warning")
 	Return Me
 End Sub
 
-Sub SetError(b As Boolean) As UOENowHTML
+Sub SetError(b As Boolean) As UOENowHTML  'ignore
 	AddClass("error")
 	Return Me
 End Sub
 
-Sub SetMedia(b As Boolean) As UOENowHTML
+Sub SetMedia(b As Boolean) As UOENowHTML   'ignore
 	AddClass("media")
 	Return Me
 End Sub
@@ -1630,7 +1630,7 @@ End Sub
 
 
 'add a break
-Sub AddBreak(b As Boolean) As UOENowHTML
+Sub AddBreak(b As Boolean) As UOENowHTML  'ignore
 	AddContent("{BR}")
 	Return Me
 End Sub

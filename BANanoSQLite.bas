@@ -4,6 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=7.51
 @EndOfDesignText@
+#IgnoreWarnings:12
 Sub Class_Globals
 	Public const DB_BOOL As String = "BOOL"
 	Public const DB_INT As String = "INT"
@@ -12,53 +13,42 @@ Sub Class_Globals
 	Public const DB_DATE As String = "DATE"
 	Public const DB_BLOB As String = "BLOB"
 	Private recType As Map
-	Type DBResult(response As String, data As List)
-	Type DBCommand(command As String, types As List, args As List, sql As String)
+	Type ResultSet(response As String, result As List, command As String, types As List, args As List, query As String)
 End Sub
 
 
-
 'initialize the class, a field named "id" is assumed to be an integer
-Public Sub Initialize As BANanoSQLite
+Public Sub Initialize() As BANanoSQLite
 	recType.Initialize
 	AddIntegers(Array("id"))
 	Return Me
 End Sub
 
-Sub GetCommand(execution As String) As DBCommand
+'execute the query and wait
+Sub GetResultSet(query As String, res As String) As ResultSet
 	Dim tt As List
 	tt.Initialize
 	Dim aa As List
-	aa.Initialize  
-	Dim resmap As Map = Json2Map(execution)
+	aa.Initialize
+	Dim dataList As List
+	dataList.Initialize
+	Dim resmap As Map = Json2Map(query)
 	Dim scommand As String = resmap.GetDefault("command", "")
 	Dim stypes As List = resmap.GetDefault("types", tt)
 	Dim sargs As List = resmap.GetDefault("args", aa)
 	Dim ssql As String = resmap.GetDefault("sql","")
-	'
-	Dim gr As DBCommand
-	gr.Initialize 
-	gr.sql = ssql
+	'	
+	Dim resmap1 As Map = Json2Map(res)
+	Dim gr As ResultSet
+	gr.Initialize
+	gr.query = ssql
 	gr.args = sargs
 	gr.command = scommand
 	gr.types = stypes
+	gr.response = resmap1.GetDefault("response","")
+	gr.result = resmap1.GetDefault("data", dataList)
 	Return gr
 End Sub
-
-Sub GetResult(execution As String) As DBResult
-	Dim dataList As List
-	dataList.Initialize 
-	Dim resmap As Map = Json2Map(execution)
-	Dim resp As String = resmap.GetDefault("response","")
-	Dim data As List = resmap.GetDefault("data", dataList)
-	'
-	Dim gr As DBResult
-	gr.Initialize 
-	gr.data = data
-	gr.Response = resp
-	Return gr
-End Sub
-
 
 'return a sql to delete record of table where one exists
 Sub DeleteAll(tblName As String) As String
